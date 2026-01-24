@@ -1,8 +1,7 @@
 {
-  "name": "todo-list",
+  "name": "weather-app",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -12,17 +11,9 @@
     "lint": "npx eslint src/",
     "pretty": "npx prettier . --write"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ernestviola/todo-list.git"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ernestviola/todo-list/issues"
-  },
-  "homepage": "https://github.com/ernestviola/todo-list#readme",
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "css-loader": "^7.1.2",
