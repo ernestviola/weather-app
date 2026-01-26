@@ -1,3 +1,5 @@
-# Webpack template
+# Weather App
 
-A simple webpack template made by Ernest Viola to quickly start new projects.
+## Attributions
+
+https://www.bigdatacloud.com/free-api/free-reverse-geocode-to-city-api

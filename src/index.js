@@ -50,8 +50,32 @@ async function getWeatherData(location) {
   }
 }
 
+async function getCityName(latitude, longitude) {
+  try {
+    const response = await fetch(
+      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}`,
+    );
+    if (response.ok) {
+      const data = response.json();
+      return data;
+    } else {
+      throw new Error("Failed to fetch");
+    }
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
 async function loadData() {
   const pos = await getUserLocation();
+  const cityName = await getCityName(pos.coords.latitude, pos.coords.longitude);
+  console.log(cityName);
   const weatherData = await getWeatherData(pos);
   console.log(weatherData);
+  const weatherDescription = document.getElementById("weather__description");
+  weatherDescription.innerText = weatherData.description;
 }
+
+function createDayForecastElement() {}
+
+function createCurrentConditionElement() {}
