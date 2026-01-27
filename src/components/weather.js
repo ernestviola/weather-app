@@ -15,10 +15,11 @@ async function getWeatherDataByLatLong(latitude, longitude) {
       const data = await response.json();
       return data;
     } else {
-      console.log("Failed to fetch");
+      throw new Error("Response is not ok: ", response.status);
     }
   } catch (error) {
-    throw new Error(error);
+    console.log(error);
+    return null;
   }
 }
 

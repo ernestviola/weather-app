@@ -11,7 +11,10 @@ async function getLatLong() {
           longitude: pos.coords.longitude,
         });
       },
-      (error) => reject(error),
+      (error) => {
+        console.log("Failed to get user location: ", error);
+        return null;
+      },
     );
   });
 }
@@ -31,10 +34,11 @@ async function getCity(latitude, longitude) {
       const data = await response.json();
       return data.city;
     } else {
-      throw new Error("Failed to fetch");
+      throw new Error("Failed to fetch: ", response.status);
     }
   } catch (error) {
-    throw new Error(error);
+    console.log(error);
+    return null;
   }
 }
 

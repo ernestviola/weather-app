@@ -9,22 +9,26 @@
     <nav>
       <span>Weather App</span>
     </nav>
-    <form action="">
-      <label for="search__location"></label>
-      <input type="search" id="search__location" name="location" />
-      <button type="submit" id="search__button">Search</button>
+    <form action="" class="search-form">
+      <input
+        type="search"
+        id="search-location"
+        name="location"
+        aria-label="Search City"
+      />
+      <button type="submit" class="search-form__button">Search</button>
     </form>
-    <div id="temperature__unit__toggle">
-      <button>Toggle</button>
-    </div>
-    <div class="weather__at__a__glance">
-      <div>
-        <span class="city__name"></span>
+    <div class="current">
+      <div class="current__city">
+        <span class="label">City</span>
+        <span class="value" id="current-city-value">--</span>
       </div>
+      <div class="current__temperature">
+        <span class="label">Temperature</span>
+        <span class="value" id="current-temperature-value">--</span>
+      </div>
+      <div class="current__details"></div>
     </div>
-    <div id="temperature__container">
-      <span id="weather__description">temperature__container</span>
-    </div>
-    <div class="weather__details"></div>
+    <div class="weather__week__container"></div>
   </body>
 </html>

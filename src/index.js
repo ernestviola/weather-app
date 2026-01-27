@@ -24,7 +24,6 @@ async function loadData() {
   const cityName = getCity(pos.latitude, pos.longitude);
   const weatherData = getWeatherDataByLatLong(pos.latitude, pos.longitude);
 
-  console.log(await weatherData);
   // const weatherData = await getWeatherData(pos);
   // console.log(weatherData);
   // const weatherDescription = document.getElementById("weather__description");
