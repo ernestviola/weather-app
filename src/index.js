@@ -14,66 +14,21 @@
 */
 
 import "./styles.css";
+import { getCity, getLatLong } from "./components/location";
+import { getWeatherDataByLatLong } from "./components/weather";
 
-loadData();
-
-async function getUserLocation() {
-  return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => resolve(pos),
-      (error) => reject(error),
-    );
-  });
-}
-
-async function getWeatherData(location) {
-  let locationString = "";
-  if (typeof location === "object") {
-    // geolocation object
-    locationString = `${location.coords.latitude},${location.coords.longitude}`;
-  } else {
-    // string object from user
-  }
-  locationString = encodeURIComponent(locationString);
-  try {
-    const response = await fetch(
-      `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${locationString}?unitGroup=us&key=EKV7KAENKYL3K8F82GTZXQ77W&contentType=json`,
-    );
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      console.log("Failed to fetch");
-    }
-  } catch (error) {
-    throw new Error(error);
-  }
-}
-
-async function getCityName(latitude, longitude) {
-  try {
-    const response = await fetch(
-      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}`,
-    );
-    if (response.ok) {
-      const data = response.json();
-      return data;
-    } else {
-      throw new Error("Failed to fetch");
-    }
-  } catch (error) {
-    throw new Error(error);
-  }
-}
+await loadData();
 
 async function loadData() {
-  const pos = await getUserLocation();
-  const cityName = await getCityName(pos.coords.latitude, pos.coords.longitude);
-  console.log(cityName);
-  const weatherData = await getWeatherData(pos);
-  console.log(weatherData);
-  const weatherDescription = document.getElementById("weather__description");
-  weatherDescription.innerText = weatherData.description;
+  const pos = await getLatLong();
+  const cityName = getCity(pos.latitude, pos.longitude);
+  const weatherData = getWeatherDataByLatLong(pos.latitude, pos.longitude);
+
+  console.log(await weatherData);
+  // const weatherData = await getWeatherData(pos);
+  // console.log(weatherData);
+  // const weatherDescription = document.getElementById("weather__description");
+  // weatherDescription.innerText = weatherData.description;
 }
 
 function createDayForecastElement() {}
