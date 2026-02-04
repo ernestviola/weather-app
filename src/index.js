@@ -43,15 +43,24 @@ async function loadData() {
 }
 
 function createDayForecastElement(day) {
-  console.log(day);
+  console.log(day.datetime);
+  const dateArr = day.datetime.split("-");
+
+  const date = new Date(
+    dateArr[0],
+    Number(dateArr[1]) - 1,
+    dateArr[2],
+  ).toLocaleDateString(undefined, {
+    month: "numeric",
+    day: "numeric",
+  });
+
+  console.log(date);
   let dayData = {
     high: day.tempmax,
     low: day.tempmin,
     icon: day.icon,
-    date: new Date(day.datetime).toLocaleDateString(undefined, {
-      month: "2-digit",
-      day: "2-digit",
-    }),
+    date,
   };
 
   const forecastEl = document.createElement("div");
