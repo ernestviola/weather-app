@@ -65,8 +65,11 @@ nav > span {
 }
 
 .weekly-weather {
+  margin-top: 200px;
   display: flex;
   flex-direction: row;
+  width: 100vw;
+  overflow: scroll;
 }
 
 .day-forecast {

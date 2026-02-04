@@ -16,6 +16,7 @@
 import "./styles.css";
 import { getCity, getLatLong } from "./components/location";
 import { getWeatherDataByLatLong } from "./components/weather";
+import weatherIcons from "./components/weatherIcons";
 
 await loadData();
 
@@ -74,9 +75,9 @@ function createDayForecastElement(day) {
   tempHighEl.className = "forecast-high";
   tempHighEl.innerText = dayData.high;
 
-  const weatherIconEl = document.createElement("span");
+  const weatherIconEl = document.createElement("img");
   weatherIconEl.className = "forecast-icon";
-  weatherIconEl.innerText = dayData.icon;
+  weatherIconEl.src = weatherIcons[dayData.icon];
 
   const tempLowEl = document.createElement("span");
   tempLowEl.className = "forecast-low";
