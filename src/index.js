@@ -18,15 +18,52 @@ import { getCity, getLatLong } from "./components/location";
 import { getWeatherDataByLatLong } from "./components/weather";
 import weatherIcons from "./components/weatherIcons";
 
-await loadData();
+let fahrenheit = true; // maybe save in localStorage?
 
-async function loadData() {
+await initialLoad();
+
+const degreeButton = document.getElementById("degree-button");
+degreeButton.addEventListener("click", (e) => {
+  e.preventDefault();
+  fahrenheit = !fahrenheit;
+  hideNonActiveTemps();
+});
+
+function hideNonActiveTemps() {
+  const fahrenheitElArr = Array.from(
+    document.getElementsByClassName("fahrenheit-temp"),
+  );
+  const celsiusElArr = Array.from(
+    document.getElementsByClassName("celsius-temp"),
+  );
+  if (fahrenheit) {
+    // hide celsius
+    // unhide fahrenheit
+    fahrenheitElArr.forEach((el) => {
+      el.hidden = false;
+    });
+    celsiusElArr.forEach((el) => {
+      el.hidden = true;
+    });
+  } else {
+    //
+    fahrenheitElArr.forEach((el) => {
+      el.hidden = true;
+    });
+    celsiusElArr.forEach((el) => {
+      el.hidden = false;
+    });
+  }
+}
+
+async function loadCityBySearch() {}
+
+async function initialLoad() {
   const pos = await getLatLong();
   const cityNameData = getCity(pos.latitude, pos.longitude);
   const weatherData = getWeatherDataByLatLong(pos.latitude, pos.longitude);
 
   const currentCityEl = document.getElementById("current-city-value");
-  const currentConditionsEl = document.getElementById("current__coonditions");
   const weeklyWeatherEl = document.querySelector(".weekly-weather");
 
   Promise.all([cityNameData, weatherData]).then((arr) => {
@@ -34,31 +71,44 @@ async function loadData() {
     const weatherData = arr[1];
 
     currentCityEl.innerText = cityName;
-    currentConditionsEl.appendChild(
-      populateCurrentConditionsEl(weatherData.currentConditions),
-    );
+    populateCurrentConditionsEl(weatherData.currentConditions);
     for (const day of weatherData.days.slice(1)) {
       weeklyWeatherEl.appendChild(createDayForecastElement(day));
     }
+    hideNonActiveTemps();
   });
 }
 
 function populateCurrentConditionsEl(currentConditions) {
   const root = document.getElementById("root");
-  root.style.backgroundColor = weatherIcons[currentConditions.icon].color
-    ? weatherIcons[currentConditions.icon].color
-    : "";
+  root.style.background = `radial-gradient(
+  #FFFFFF,
+  ${weatherIcons[currentConditions.icon].color}
+  )`;
 
-  console.log(currentConditions);
-  const currentConditionsContainerEl = document.createElement("div");
-  const currentTempEl = document.createElement("span");
-  currentTempEl.innerText = currentConditions.temp;
+  const currentConditionsEl = document.getElementById("current-conditions");
+
+  const currentTempFahrenheitEl = document.createElement("span");
+  currentTempFahrenheitEl.innerText = `${currentConditions.temp} F°`;
+  currentTempFahrenheitEl.classList.add("fahrenheit-temp");
+
+  const currentTempCelsiusEl = document.createElement("span");
+  currentTempCelsiusEl.innerText = `${fahrenheitToCelsius(currentConditions.temp)} C°`;
+  currentTempCelsiusEl.classList.add("celsius-temp");
 
   const currentIcon = document.createElement("img");
   currentIcon.src = weatherIcons[currentConditions.icon].icon;
-  currentConditionsContainerEl.appendChild(currentTempEl);
-  currentConditionsContainerEl.appendChild(currentIcon);
-  return currentConditionsContainerEl;
+  currentIcon.className = "current-conditions-icon";
+
+  currentConditionsEl.appendChild(currentTempCelsiusEl);
+  currentConditionsEl.appendChild(currentTempFahrenheitEl);
+  currentConditionsEl.appendChild(currentIcon);
+
+  return true;
+}
+
+function fahrenheitToCelsius(f) {
+  return (((f - 32) * 5) / 9).toFixed(1);
 }
 
 function createDayForecastElement(day) {
@@ -88,22 +138,36 @@ function createDayForecastElement(day) {
   tempDateEl.className = "forecast-date";
   tempDateEl.innerText = dayData.date;
 
-  const tempHighEl = document.createElement("span");
-  tempHighEl.className = "forecast-high";
-  tempHighEl.innerText = dayData.high;
+  const tempHighFahrenheitEl = document.createElement("span");
+  tempHighFahrenheitEl.className = "forecast-high";
+  tempHighFahrenheitEl.innerText = dayData.high + " F°";
+  tempHighFahrenheitEl.classList.add("fahrenheit-temp");
+
+  const tempHighCelsiusEl = document.createElement("span");
+  tempHighCelsiusEl.className = "forecast-high";
+  tempHighCelsiusEl.innerText = fahrenheitToCelsius(dayData.high) + " C°";
+  tempHighCelsiusEl.classList.add("celsius-temp");
 
   const weatherIconEl = document.createElement("img");
   weatherIconEl.className = "forecast-icon";
   weatherIconEl.src = weatherIcons[dayData.icon].icon;
 
-  const tempLowEl = document.createElement("span");
-  tempLowEl.className = "forecast-low";
-  tempLowEl.innerText = dayData.low;
+  const tempLowFahrenheitEl = document.createElement("span");
+  tempLowFahrenheitEl.className = "forecast-low";
+  tempLowFahrenheitEl.innerText = dayData.low + " F°";
+  tempLowFahrenheitEl.classList.add("fahrenheit-temp");
+
+  const tempLowCelsiusEl = document.createElement("span");
+  tempLowCelsiusEl.className = "forecast-high";
+  tempLowCelsiusEl.innerText = fahrenheitToCelsius(dayData.low) + " C°";
+  tempLowCelsiusEl.classList.add("celsius-temp");
 
   forecastEl.appendChild(tempDateEl);
-  forecastEl.appendChild(tempHighEl);
+  forecastEl.appendChild(tempHighCelsiusEl);
+  forecastEl.appendChild(tempHighFahrenheitEl);
   forecastEl.appendChild(weatherIconEl);
-  forecastEl.appendChild(tempLowEl);
+  forecastEl.appendChild(tempLowCelsiusEl);
+  forecastEl.appendChild(tempLowFahrenheitEl);
 
   return forecastEl;
 }
