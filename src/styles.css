@@ -15,6 +15,7 @@
     "Helvetica Neue",
     sans-serif;
   line-height: 1.5em;
+  box-sizing: border-box;
 }
 
 body {
@@ -60,16 +61,13 @@ nav > span {
   margin-top: 80px;
 }
 
-.value {
-  font-size: 1.5em;
-}
-
 .weekly-weather {
   margin-top: 200px;
   display: flex;
   flex-direction: row;
-  width: 100vw;
   overflow: scroll;
+  margin: 0 auto;
+  width: 60%;
 }
 
 .day-forecast {
@@ -79,4 +77,13 @@ nav > span {
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
+  flex: 0 0 calc(100% / 7);
+}
+
+.forecast-date {
+  font-weight: 600;
+}
+
+.forecast-icon {
+  height: 40px;
 }

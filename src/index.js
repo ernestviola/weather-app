@@ -23,12 +23,10 @@ await loadData();
 async function loadData() {
   const pos = await getLatLong();
   const cityNameData = getCity(pos.latitude, pos.longitude);
-  const weatherData = await getWeatherDataByLatLong(
-    pos.latitude,
-    pos.longitude,
-  );
+  const weatherData = getWeatherDataByLatLong(pos.latitude, pos.longitude);
+
   const currentCityEl = document.getElementById("current-city-value");
-  const currentTempEl = document.getElementById("current-temperature-value");
+  const currentConditionsEl = document.getElementById("current__coonditions");
   const weeklyWeatherEl = document.querySelector(".weekly-weather");
 
   Promise.all([cityNameData, weatherData]).then((arr) => {
@@ -36,15 +34,34 @@ async function loadData() {
     const weatherData = arr[1];
 
     currentCityEl.innerText = cityName;
-    currentTempEl.innerText = weatherData.currentConditions.temp;
-    for (const day of weatherData.days) {
+    currentConditionsEl.appendChild(
+      populateCurrentConditionsEl(weatherData.currentConditions),
+    );
+    for (const day of weatherData.days.slice(1)) {
       weeklyWeatherEl.appendChild(createDayForecastElement(day));
     }
   });
 }
 
+function populateCurrentConditionsEl(currentConditions) {
+  const root = document.getElementById("root");
+  root.style.backgroundColor = weatherIcons[currentConditions.icon].color
+    ? weatherIcons[currentConditions.icon].color
+    : "";
+
+  console.log(currentConditions);
+  const currentConditionsContainerEl = document.createElement("div");
+  const currentTempEl = document.createElement("span");
+  currentTempEl.innerText = currentConditions.temp;
+
+  const currentIcon = document.createElement("img");
+  currentIcon.src = weatherIcons[currentConditions.icon].icon;
+  currentConditionsContainerEl.appendChild(currentTempEl);
+  currentConditionsContainerEl.appendChild(currentIcon);
+  return currentConditionsContainerEl;
+}
+
 function createDayForecastElement(day) {
-  console.log(day.datetime);
   const dateArr = day.datetime.split("-");
 
   const date = new Date(
@@ -56,7 +73,6 @@ function createDayForecastElement(day) {
     day: "numeric",
   });
 
-  console.log(date);
   let dayData = {
     high: day.tempmax,
     low: day.tempmin,
@@ -66,6 +82,7 @@ function createDayForecastElement(day) {
 
   const forecastEl = document.createElement("div");
   forecastEl.className = "day-forecast";
+  forecastEl.style.backgroundColor = weatherIcons[dayData.icon].color;
 
   const tempDateEl = document.createElement("span");
   tempDateEl.className = "forecast-date";
@@ -77,7 +94,7 @@ function createDayForecastElement(day) {
 
   const weatherIconEl = document.createElement("img");
   weatherIconEl.className = "forecast-icon";
-  weatherIconEl.src = weatherIcons[dayData.icon];
+  weatherIconEl.src = weatherIcons[dayData.icon].icon;
 
   const tempLowEl = document.createElement("span");
   tempLowEl.className = "forecast-low";

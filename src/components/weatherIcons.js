@@ -22,30 +22,100 @@ import thunderShowersNight from "../images/weatherIcons/thunder-showers-night.sv
 import thunder from "../images/weatherIcons/thunder.svg";
 import wind from "../images/weatherIcons/wind.svg";
 
+const ice_color_light = "#5ec6ec";
+const ice_color_dark = "#5ec6ec";
+const cloud_color_light = "#d3d6d7";
+const cloud_color_dark = "#686969";
+const day_color = "#f1da0b";
+const night_color = "#283235";
+
 // Create icon map
 export const weatherIcons = {
-  "clear-day": clearDay,
+  "clear-day": {
+    icon: clearDay,
+    color: day_color,
+  },
   "clear-night": clearNight,
-  cloudy: cloudy,
-  fog: fog,
-  hail: hail,
-  "partly-cloudy-day": partlyCloudyDay,
-  "partly-cloudy-night": partlyCloudyNight,
-  "rain-snow-showers-day": rainSnowShowersDay,
-  "rain-snow-showers-night": rainSnowShowersNight,
-  "rain-snow": rainSnow,
-  rain: rain,
-  "showers-day": showersDay,
-  "showers-night": showersNight,
-  sleet: sleet,
-  "snow-showers-day": snowShowersDay,
-  "snow-showers-night": snowShowersNight,
-  snow: snow,
-  "thunder-rain": thunderRain,
-  "thunder-showers-day": thunderShowersDay,
-  "thunder-showers-night": thunderShowersNight,
-  thunder: thunder,
-  wind: wind,
+  cloudy: {
+    icon: cloudy,
+    color: night_color,
+  },
+  fog: {
+    icon: fog,
+    color: cloud_color_light,
+  },
+  hail: {
+    icon: hail,
+    color: ice_color_light,
+  },
+  "partly-cloudy-day": {
+    icon: partlyCloudyDay,
+    color: cloud_color_light,
+  },
+  "partly-cloudy-night": {
+    icon: partlyCloudyNight,
+    color: cloud_color_dark,
+  },
+  "rain-snow-showers-day": {
+    icon: rainSnowShowersDay,
+    color: ice_color_light,
+  },
+  "rain-snow-showers-night": {
+    icon: rainSnowShowersNight,
+    color: ice_color_dark,
+  },
+  "rain-snow": {
+    icon: rainSnow,
+    color: ice_color_light,
+  },
+  rain: {
+    icon: rain,
+    color: cloud_color_light,
+  },
+  "showers-day": {
+    icon: showersDay,
+    color: cloud_color_light,
+  },
+  "showers-night": {
+    icon: showersNight,
+    color: cloud_color_dark,
+  },
+  sleet: {
+    icon: sleet,
+    color: ice_color_light,
+  },
+  "snow-showers-day": {
+    icon: snowShowersDay,
+    color: ice_color_light,
+  },
+  "snow-showers-night": {
+    icon: snowShowersNight,
+    color: ice_color_dark,
+  },
+  snow: {
+    icon: snow,
+    color: ice_color_light,
+  },
+  "thunder-rain": {
+    icon: thunderRain,
+    color: cloud_color_dark,
+  },
+  "thunder-showers-day": {
+    icon: thunderShowersDay,
+    color: cloud_color_dark,
+  },
+  "thunder-showers-night": {
+    icon: thunderShowersNight,
+    color: cloud_color_dark,
+  },
+  thunder: {
+    icon: thunder,
+    color: cloud_color_dark,
+  },
+  wind: {
+    icon: wind,
+    color: cloud_color_light,
+  },
 };
 
 export default weatherIcons;
