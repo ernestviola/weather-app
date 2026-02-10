@@ -23,4 +23,27 @@ async function getWeatherDataByLatLong(latitude, longitude) {
   }
 }
 
-export { getWeatherDataByLatLong };
+/**
+ *
+ * @param {string} cityName Name of the city you want weather for
+ */
+
+async function getWeatherDataByCityName(cityName) {
+  const encodedCityName = encodeURIComponent(cityName);
+  try {
+    const response = await fetch(
+      `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${encodedCityName}?unitGroup=us&key=EKV7KAENKYL3K8F82GTZXQ77W&contentType=json`,
+    );
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Response is not ok: ", response.status);
+    }
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export { getWeatherDataByLatLong, getWeatherDataByCityName };

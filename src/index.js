@@ -15,19 +15,15 @@
 
 import "./styles.css";
 import { getCity, getLatLong } from "./components/location";
-import { getWeatherDataByLatLong } from "./components/weather";
+import {
+  getWeatherDataByLatLong,
+  getWeatherDataByCityName,
+} from "./components/weather";
 import weatherIcons from "./components/weatherIcons";
 
 let fahrenheit = true; // maybe save in localStorage?
 
 await initialLoad();
-
-const degreeButton = document.getElementById("degree-button");
-degreeButton.addEventListener("click", (e) => {
-  e.preventDefault();
-  fahrenheit = !fahrenheit;
-  hideNonActiveTemps();
-});
 
 function hideNonActiveTemps() {
   const fahrenheitElArr = Array.from(
@@ -56,27 +52,59 @@ function hideNonActiveTemps() {
   }
 }
 
-async function loadCityBySearch() {}
-
 async function initialLoad() {
-  const pos = await getLatLong();
-  const cityNameData = getCity(pos.latitude, pos.longitude);
-  const weatherData = getWeatherDataByLatLong(pos.latitude, pos.longitude);
+  const degreeButton = document.getElementById("degree-button");
+  degreeButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    fahrenheit = !fahrenheit;
+    hideNonActiveTemps();
+  });
 
-  const currentCityEl = document.getElementById("current-city-value");
+  const searchEl = document.getElementById("search-form");
+  searchEl.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+
+    await loadWeatherElements(formData.get("location"));
+    e.target.reset();
+  });
+
+  await loadWeatherElements();
+}
+
+async function loadWeatherElements(cityName = null) {
+  let weatherData;
+  if (cityName) {
+    weatherData = getWeatherDataByCityName(cityName);
+  } else {
+    const pos = await getLatLong();
+    cityName = await getCity(pos.latitude, pos.longitude);
+    weatherData = getWeatherDataByLatLong(pos.latitude, pos.longitude);
+  }
+  resetElements();
   const weeklyWeatherEl = document.querySelector(".weekly-weather");
+  const currentCityEl = document.getElementById("current-city-value");
 
-  Promise.all([cityNameData, weatherData]).then((arr) => {
-    const cityName = arr[0];
-    const weatherData = arr[1];
-
-    currentCityEl.innerText = cityName;
-    populateCurrentConditionsEl(weatherData.currentConditions);
-    for (const day of weatherData.days.slice(1)) {
-      weeklyWeatherEl.appendChild(createDayForecastElement(day));
+  currentCityEl.innerText = cityName;
+  weatherData.then((data) => {
+    if (data) {
+      populateCurrentConditionsEl(data.currentConditions);
+      for (const day of data.days.slice(1)) {
+        weeklyWeatherEl.appendChild(createDayForecastElement(day));
+      }
     }
     hideNonActiveTemps();
   });
+}
+
+function resetElements() {
+  const weeklyWeatherEl = document.querySelector(".weekly-weather");
+  const currentCityEl = document.getElementById("current-city-value");
+  const currentConditionsEl = document.getElementById("current-conditions");
+
+  weeklyWeatherEl.replaceChildren();
+  currentCityEl.replaceChildren();
+  currentConditionsEl.replaceChildren();
 }
 
 function populateCurrentConditionsEl(currentConditions) {
