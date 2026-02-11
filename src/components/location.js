@@ -32,7 +32,7 @@ async function getCity(latitude, longitude) {
     );
     if (response.ok) {
       const data = await response.json();
-      return data.city;
+      return data.city + ", " + data.principalSubdivision;
     } else {
       throw new Error("Failed to fetch: ", response.status);
     }

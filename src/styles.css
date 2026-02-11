@@ -32,7 +32,7 @@
 }
 
 nav {
-  margin-top: 10px;
+  padding-top: 20px;
   margin-bottom: 30px;
 }
 
@@ -53,6 +53,8 @@ nav > span {
   width: 40%;
   padding: 4px 8px;
   border-radius: 15px;
+  box-shadow: 0px 0px 5px rgb(149, 145, 145);
+  background-color: #ffffff7f;
 }
 
 #search-location {
@@ -78,8 +80,8 @@ nav > span {
 
   margin: 80px auto;
   padding: 40px;
-  width: 300px;
-  height: 300px;
+  width: 400px;
+  height: 320px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -94,11 +96,22 @@ nav > span {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 20px;
+}
+
+.current-conditions > span {
+  font-size: 22px;
 }
 
 .current-conditions-icon {
   height: 50px;
+}
+
+.current-conditions-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: center;
 }
 
 .weekly-weather {
@@ -107,6 +120,7 @@ nav > span {
   flex-direction: row;
   gap: 8px;
   overflow: scroll;
+  width: 80%;
 }
 
 .day-forecast {

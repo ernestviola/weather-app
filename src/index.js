@@ -87,7 +87,6 @@ async function loadWeatherElements(cityName = null) {
     weatherData = getWeatherDataByCityName(cityName);
   } else {
     const pos = await getLatLong();
-    cityName = await getCity(pos.latitude, pos.longitude);
     weatherData = getWeatherDataByLatLong(pos.latitude, pos.longitude);
   }
 
@@ -96,9 +95,10 @@ async function loadWeatherElements(cityName = null) {
   const weeklyWeatherEl = document.querySelector(".weekly-weather");
   const currentCityEl = document.getElementById("current-city-value");
 
-  weatherData.then((data) => {
-    currentCityEl.innerText = cityName;
+  weatherData.then(async (data) => {
     if (data) {
+      cityName = await getCity(data.latitude, data.longitude);
+      currentCityEl.innerText = cityName;
       populateCurrentConditionsEl(data.currentConditions);
       for (const day of data.days.slice(1)) {
         weeklyWeatherEl.appendChild(createDayForecastElement(day));
@@ -119,6 +119,13 @@ function resetElements() {
 }
 
 function populateCurrentConditionsEl(currentConditions) {
+  /*
+  sunrise
+  sunset
+  feels like
+  uv index
+  */
+  console.log(currentConditions);
   const root = document.getElementById("root");
   root.style.setProperty(
     "--weather-color",
@@ -136,13 +143,30 @@ function populateCurrentConditionsEl(currentConditions) {
   currentTempCelsiusEl.classList.add("celsius-temp");
 
   const currentIcon = document.createElement("img");
-  console.log(currentConditions.icon);
   currentIcon.src = weatherIcons[currentConditions.icon].icon;
   currentIcon.className = "current-conditions-icon";
+
+  const currentConditionsDetailsEl = document.createElement("div");
+  currentConditionsDetailsEl.className = "current-conditions-details";
+  const sunsetEl = document.createElement("span");
+  sunsetEl.innerText = "Sunset: " + currentConditions.sunset;
+  const sunriseEl = document.createElement("span");
+  sunriseEl.innerText = "Sunrise: " + currentConditions.sunrise;
+  const feelsLikeEl = document.createElement("span");
+  feelsLikeEl.innerText = "Feels like: " + currentConditions.feelslike;
+  const uvEl = document.createElement("span");
+  uvEl.innerText = "UV Index: " + currentConditions.uvindex;
+
+  currentConditionsDetailsEl.appendChild(sunriseEl);
+  currentConditionsDetailsEl.appendChild(sunsetEl);
+  currentConditionsDetailsEl.appendChild(feelsLikeEl);
+  currentConditionsDetailsEl.appendChild(uvEl);
 
   currentConditionsEl.appendChild(currentTempCelsiusEl);
   currentConditionsEl.appendChild(currentTempFahrenheitEl);
   currentConditionsEl.appendChild(currentIcon);
+
+  currentConditionsEl.appendChild(currentConditionsDetailsEl);
 
   return true;
 }

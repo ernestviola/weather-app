@@ -28,7 +28,7 @@ const cloud_color_light = "#d3d6d7";
 const cloud_color_dark = "#686969";
 const partly_cloudy_color = "#e8e9c1";
 const day_color = "#f1da0b";
-const night_color = "#283235";
+const night_color = "#1a2326";
 
 // Create icon map
 export const weatherIcons = {
