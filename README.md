@@ -3,7 +3,7 @@
 A weather app made with the help of webpack. This is a project used to practice
 calling APIs as well as async functions.
 
-[preview]()
+[preview](https://ernestviola.github.io/weather-app/)
 
 ## Features
 
