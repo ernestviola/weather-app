@@ -26,6 +26,7 @@ const ice_color_light = "#5ec6ec";
 const ice_color_dark = "#5ec6ec";
 const cloud_color_light = "#d3d6d7";
 const cloud_color_dark = "#686969";
+const partly_cloudy_color = "#e8e9c1";
 const day_color = "#f1da0b";
 const night_color = "#283235";
 
@@ -35,7 +36,10 @@ export const weatherIcons = {
     icon: clearDay,
     color: day_color,
   },
-  "clear-night": clearNight,
+  "clear-night": {
+    icon: clearNight,
+    color: night_color,
+  },
   cloudy: {
     icon: cloudy,
     color: night_color,
@@ -50,7 +54,7 @@ export const weatherIcons = {
   },
   "partly-cloudy-day": {
     icon: partlyCloudyDay,
-    color: cloud_color_light,
+    color: partly_cloudy_color,
   },
   "partly-cloudy-night": {
     icon: partlyCloudyNight,

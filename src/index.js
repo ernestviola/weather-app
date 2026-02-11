@@ -21,7 +21,9 @@ import {
 } from "./components/weather";
 import weatherIcons from "./components/weatherIcons";
 
-let fahrenheit = true; // maybe save in localStorage?
+let fahrenheit = localStorage.getItem("fahrenheit")
+  ? localStorage.getItem("fahrenheit") == "true"
+  : true; // maybe save in localStorage?
 
 await initialLoad();
 
@@ -32,6 +34,8 @@ function hideNonActiveTemps() {
   const celsiusElArr = Array.from(
     document.getElementsByClassName("celsius-temp"),
   );
+  const fahrenheitButtonEl = document.getElementById("fahrenheit");
+  const celsiusButtonEl = document.getElementById("celsius");
   if (fahrenheit) {
     // hide celsius
     // unhide fahrenheit
@@ -41,6 +45,8 @@ function hideNonActiveTemps() {
     celsiusElArr.forEach((el) => {
       el.hidden = true;
     });
+    fahrenheitButtonEl.classList.add("active");
+    celsiusButtonEl.classList.remove("active");
   } else {
     //
     fahrenheitElArr.forEach((el) => {
@@ -49,6 +55,8 @@ function hideNonActiveTemps() {
     celsiusElArr.forEach((el) => {
       el.hidden = false;
     });
+    fahrenheitButtonEl.classList.remove("active");
+    celsiusButtonEl.classList.add("active");
   }
 }
 
@@ -57,6 +65,7 @@ async function initialLoad() {
   degreeButton.addEventListener("click", (e) => {
     e.preventDefault();
     fahrenheit = !fahrenheit;
+    localStorage.setItem("fahrenheit", fahrenheit);
     hideNonActiveTemps();
   });
 
@@ -81,12 +90,14 @@ async function loadWeatherElements(cityName = null) {
     cityName = await getCity(pos.latitude, pos.longitude);
     weatherData = getWeatherDataByLatLong(pos.latitude, pos.longitude);
   }
+
   resetElements();
+
   const weeklyWeatherEl = document.querySelector(".weekly-weather");
   const currentCityEl = document.getElementById("current-city-value");
 
-  currentCityEl.innerText = cityName;
   weatherData.then((data) => {
+    currentCityEl.innerText = cityName;
     if (data) {
       populateCurrentConditionsEl(data.currentConditions);
       for (const day of data.days.slice(1)) {
@@ -109,10 +120,10 @@ function resetElements() {
 
 function populateCurrentConditionsEl(currentConditions) {
   const root = document.getElementById("root");
-  root.style.background = `radial-gradient(
-  #FFFFFF,
-  ${weatherIcons[currentConditions.icon].color}
-  )`;
+  root.style.setProperty(
+    "--weather-color",
+    weatherIcons[currentConditions.icon].color,
+  );
 
   const currentConditionsEl = document.getElementById("current-conditions");
 
@@ -125,6 +136,7 @@ function populateCurrentConditionsEl(currentConditions) {
   currentTempCelsiusEl.classList.add("celsius-temp");
 
   const currentIcon = document.createElement("img");
+  console.log(currentConditions.icon);
   currentIcon.src = weatherIcons[currentConditions.icon].icon;
   currentIcon.className = "current-conditions-icon";
 
@@ -160,7 +172,8 @@ function createDayForecastElement(day) {
 
   const forecastEl = document.createElement("div");
   forecastEl.className = "day-forecast";
-  forecastEl.style.backgroundColor = weatherIcons[dayData.icon].color;
+  let bgColor = weatherIcons[dayData.icon].color + "3e";
+  forecastEl.style.backgroundColor = bgColor;
 
   const tempDateEl = document.createElement("span");
   tempDateEl.className = "forecast-date";
@@ -199,5 +212,3 @@ function createDayForecastElement(day) {
 
   return forecastEl;
 }
-
-function createCurrentConditionElement() {}
